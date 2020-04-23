@@ -54,9 +54,9 @@ public class Percolation {
   // does the system percolate?
   public boolean percolates() {
     boolean percolates = false;
-    int firstBottomSiteId = n*(n-1);
+    int bottomSiteId = n*(n-1);
     for(int i = 0; i < n; i++) {
-      if(isSiteFull(firstBottomSiteId + i)) {
+      if(isSiteFull(bottomSiteId + i)) {
         percolates = true;
       }
     }
@@ -70,8 +70,8 @@ public class Percolation {
 
   // private methods
   private boolean isSiteFull(int siteId) {
-    for(int topSite = 0; topSite < n; topSite++) {
-      if(openSites[topSite] && siteSystem.connected(topSite, siteId)){
+    for(int topSiteId = 0; topSiteId < n; topSiteId++) {
+      if(openSites[topSiteId] && siteSystem.connected(topSiteId, siteId)){
         return true;
       }
     }
