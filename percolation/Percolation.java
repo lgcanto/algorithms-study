@@ -36,7 +36,8 @@ public class Percolation {
 
   // is the site (row, col) full?
   public boolean isFull(int row, int col){
-    //TODO
+    int siteId = getSiteId(row, col);
+    return isSiteFull(siteId);
   }
 
   // returns the number of open sites
@@ -52,7 +53,29 @@ public class Percolation {
 
   // does the system percolate?
   public boolean percolates() {
-    //TODO
+    boolean percolates = false;
+    int firstBottomSiteId = n*(n-1);
+    for(int i = 0; i < n; i++) {
+      if(isSiteFull(firstBottomSiteId + i)) {
+        percolates = true;
+      }
+    }
+    return percolates;
+  }
+
+  // test client
+  public static void main(String[] args) {
+    System.out.println("Yep, percolation works.");
+  }
+
+  // private methods
+  private boolean isSiteFull(int siteId) {
+    for(int topSite = 0; topSite < n; topSite++) {
+      if(openSites[topSite] && siteSystem.connected(topSite, siteId)){
+        return true;
+      }
+    }
+    return false;
   }
 
   private int getSiteId(int row, int col) {
@@ -64,11 +87,11 @@ public class Percolation {
 
   private void uniteNearSites(int siteId) {
     int[] nearSitesIds = new int[4];
-    nearSitesIds[0] = siteId - 4; //upper
-    nearSitesIds[1] = siteId + 4; //lower
+    nearSitesIds[0] = siteId - n; //upper
+    nearSitesIds[1] = siteId + n; //lower
     nearSitesIds[2] = siteId - 1; //left
     nearSitesIds[3] = siteId + 1; //right
-    for(int i = 0; i < 5; i++) {
+    for(int i = 0; i < nearSitesIds.length; i++) {
       int nearSiteId = nearSitesIds[i];
       if(nearSiteId < openSites.length &&
           nearSiteId >= 0 &&
@@ -82,10 +105,5 @@ public class Percolation {
     if(row < 1 || row > n || col < 1 || col > n) {
       throw new IllegalArgumentException();
     }
-  }
-
-  // test client
-  public static void main(String[] args) {
-    System.out.println("Percolation works!");
   }
 }
