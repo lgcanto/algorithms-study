@@ -12,9 +12,9 @@ public class Percolation {
       throw new IllegalArgumentException();
     }
     this.n = n;
-    siteSystem = new WeightedQuickUnionUF(n^2);
-    openSites = new boolean[n^2];
-    for(int i = 0; i < (n^2); i ++) {
+    siteSystem = new WeightedQuickUnionUF(n*n);
+    openSites = new boolean[n*n];
+    for(int i = 0; i < (n*n); i ++) {
       openSites[i] = false;
     }
   }
@@ -58,6 +58,7 @@ public class Percolation {
     for(int i = 0; i < n; i++) {
       if(isSiteFull(bottomSiteId + i)) {
         percolates = true;
+        break;
       }
     }
     return percolates;
