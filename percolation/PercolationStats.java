@@ -4,11 +4,10 @@ import edu.princeton.cs.algs4.StdStats;
 public class PercolationStats
 {
 
-  private int trials = 0;
-  private Percolation percolationSystem;
-  private double mean = 0;
-  private double stddev = 0;
   private static final double CONFIDENCE_95 = 1.96;
+  private final int trials;
+  private final double mean;
+  private final double stddev;
 
   // perform independent trials on an n-by-n grid
   public PercolationStats(int n, int trials)
@@ -18,7 +17,7 @@ public class PercolationStats
     double[] thresholds = new double[trials];
     for (int trial = 0; trial < trials; trial++)
     {
-      percolationSystem = new Percolation(n);
+      Percolation percolationSystem = new Percolation(n);
       double openSites = 0;
       double totalSites = n * n;
       while (!percolationSystem.percolates())
@@ -75,9 +74,9 @@ public class PercolationStats
 
 
   // private methods
-  private void validateInputs(int n, int trials)
+  private void validateInputs(int n, int t)
   {
-    if (n <= 0 || trials <= 0)
+    if (n <= 0 || t <= 0)
     {
       throw new IllegalArgumentException();
     }
