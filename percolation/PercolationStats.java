@@ -8,7 +8,7 @@ public class PercolationStats
   private Percolation percolationSystem;
   private double mean = 0;
   private double stddev = 0;
-  public static final double CONFIDENCE_95 = 1.96;
+  private static final double CONFIDENCE_95 = 1.96;
 
   // perform independent trials on an n-by-n grid
   public PercolationStats(int n, int trials)
