@@ -23,9 +23,7 @@ public class PercolationStats
       {
         int randomRow = StdRandom.uniform(n) + 1;
         int randomCol = StdRandom.uniform(n) + 1;
-        if (!percolationSystem.isOpen(randomRow, randomCol)) {
-          percolationSystem.open(randomRow, randomCol);
-        }
+        percolationSystem.open(randomRow, randomCol);
       }
       thresholds[trial] = percolationSystem.numberOfOpenSites() / totalSites;
     }

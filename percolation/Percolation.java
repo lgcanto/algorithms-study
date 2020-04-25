@@ -5,6 +5,7 @@ public class Percolation {
   private final WeightedQuickUnionUF siteSystem;
   private final int n;
   private boolean [] openSites;
+  private int numberOfOpenSites;
 
   // creates n-by-n grid, with all sites initially blocked
   public Percolation(int n) {
@@ -24,6 +25,7 @@ public class Percolation {
     int siteId = getSiteId(row, col);
     if (!openSites[siteId]) {
       openSites[siteId] = true;
+      numberOfOpenSites++;
       uniteNearSites(siteId);
     }
   }
@@ -42,13 +44,7 @@ public class Percolation {
 
   // returns the number of open sites
   public int numberOfOpenSites() {
-    int count = 0;
-    for (int i = 0; i < openSites.length; i++) {
-      if (openSites[i]) {
-        count++;
-      }
-    }
-    return count;
+    return numberOfOpenSites;
   }
 
   // does the system percolate?
