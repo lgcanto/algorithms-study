@@ -8,13 +8,13 @@ public class Percolation {
 
   // creates n-by-n grid, with all sites initially blocked
   public Percolation(int n) {
-    if(n <= 0) {
+    if (n <= 0) {
       throw new IllegalArgumentException();
     }
     this.n = n;
     siteSystem = new WeightedQuickUnionUF(n*n);
     openSites = new boolean[n*n];
-    for(int i = 0; i < (n*n); i ++) {
+    for (int i = 0; i < (n*n); i ++) {
       openSites[i] = false;
     }
   }
@@ -22,7 +22,7 @@ public class Percolation {
   // opens the site (row, col) if it is not open already
   public void open(int row, int col) {
     int siteId = getSiteId(row, col);
-    if(!openSites[siteId]) {
+    if (!openSites[siteId]) {
       openSites[siteId] = true;
       uniteNearSites(siteId);
     }
@@ -35,7 +35,7 @@ public class Percolation {
   }
 
   // is the site (row, col) full?
-  public boolean isFull(int row, int col){
+  public boolean isFull(int row, int col) {
     int siteId = getSiteId(row, col);
     return isSiteFull(siteId);
   }
@@ -43,8 +43,8 @@ public class Percolation {
   // returns the number of open sites
   public int numberOfOpenSites() {
     int count = 0;
-    for(int i = 0; i < openSites.length; i++) {
-      if(openSites[i]){
+    for (int i = 0; i < openSites.length; i++) {
+      if (openSites[i]) {
         count++;
       }
     }
@@ -55,8 +55,8 @@ public class Percolation {
   public boolean percolates() {
     boolean percolates = false;
     int bottomSiteId = n*(n-1);
-    for(int i = 0; i < n; i++) {
-      if(isSiteFull(bottomSiteId + i)) {
+    for (int i = 0; i < n; i++) {
+      if (isSiteFull(bottomSiteId + i)) {
         percolates = true;
         break;
       }
@@ -71,8 +71,8 @@ public class Percolation {
 
   // private methods
   private boolean isSiteFull(int siteId) {
-    for(int topSiteId = 0; topSiteId < n; topSiteId++) {
-      if(openSites[topSiteId] && siteSystem.connected(topSiteId, siteId)){
+    for (int topSiteId = 0; topSiteId < n; topSiteId++) {
+      if (openSites[topSiteId] && siteSystem.find(topSiteId) ==  siteSystem.find(siteId)) {
         return true;
       }
     }
@@ -87,14 +87,15 @@ public class Percolation {
   }
 
   private void uniteNearSites(int siteId) {
-    int[] nearSitesIds = new int[4];
-    nearSitesIds[0] = siteId - n; //upper
-    nearSitesIds[1] = siteId + n; //lower
-    nearSitesIds[2] = siteId - 1; //left
-    nearSitesIds[3] = siteId + 1; //right
-    for(int i = 0; i < nearSitesIds.length; i++) {
+    int nearSitesIds [] = {
+      siteId - n, // upper
+      siteId + n, // lower
+      siteId - 1, // left
+      siteId + 1  // right
+    };
+    for (int i = 0; i < nearSitesIds.length; i++) {
       int nearSiteId = nearSitesIds[i];
-      if(nearSiteId < openSites.length &&
+      if (nearSiteId < openSites.length &&
           nearSiteId >= 0 &&
           openSites[nearSiteId]) {
         siteSystem.union(siteId, nearSiteId);
@@ -103,7 +104,7 @@ public class Percolation {
   }
 
   private void validateRowCol(int row, int col) {
-    if(row < 1 || row > n || col < 1 || col > n) {
+    if (row < 1 || row > n || col < 1 || col > n) {
       throw new IllegalArgumentException();
     }
   }
