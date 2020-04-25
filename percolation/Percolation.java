@@ -87,7 +87,7 @@ public class Percolation {
   }
 
   private void uniteNearSites(int siteId) {
-    int nearSitesIds [] = {
+    int[] nearSitesIds = {
       siteId - n, // upper
       siteId + n, // lower
       siteId - 1, // left
