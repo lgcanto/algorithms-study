@@ -18,16 +18,14 @@ public class PercolationStats
     for (int trial = 0; trial < trials; trial++)
     {
       Percolation percolationSystem = new Percolation(n);
-      double openSites = 0;
       double totalSites = n * n;
       while (!percolationSystem.percolates())
       {
         int randomRow = StdRandom.uniform(n) + 1;
         int randomCol = StdRandom.uniform(n) + 1;
         percolationSystem.open(randomRow, randomCol);
-        openSites++;
       }
-      thresholds[trial] = openSites / totalSites;
+      thresholds[trial] = percolationSystem.numberOfOpenSites() / totalSites;
     }
     mean = StdStats.mean(thresholds);
     stddev = StdStats.stddev(thresholds);
