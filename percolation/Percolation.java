@@ -83,19 +83,19 @@ public class Percolation {
     int leftSite = siteId - 1;
     int rightSite = siteId + 1;
 
-    if(upperSite >= 0 && openSites[upperSite]) {
+    if (upperSite >= 0 && openSites[upperSite]) {
       siteSystem.union(siteId, upperSite);
     }
 
-    if(lowerSite < openSites.length && openSites[lowerSite]) {
+    if (lowerSite < openSites.length && openSites[lowerSite]) {
       siteSystem.union(siteId, lowerSite);
     }
 
-    if(leftSite >= 0 && siteId % n != 0 && openSites[leftSite]) {
+    if (leftSite >= 0 && siteId % n != 0 && openSites[leftSite]) {
       siteSystem.union(siteId, leftSite);
     }
 
-    if(rightSite < openSites.length && (siteId + 1) % n != 0 && openSites[rightSite]) {
+    if (rightSite < openSites.length && (siteId + 1) % n != 0 && openSites[rightSite]) {
       siteSystem.union(siteId, rightSite);
     }
   }
