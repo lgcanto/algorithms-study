@@ -78,19 +78,25 @@ public class Percolation {
   }
 
   private void uniteNearSites(int siteId) {
-    int[] nearSitesIds = {
-      siteId - n, // upper
-      siteId + n, // lower
-      siteId - 1, // left
-      siteId + 1  // right
-    };
-    for (int i = 0; i < nearSitesIds.length; i++) {
-      int nearSiteId = nearSitesIds[i];
-      if (nearSiteId < openSites.length &&
-          nearSiteId >= 0 &&
-          openSites[nearSiteId]) {
-        siteSystem.union(siteId, nearSiteId);
-      }
+    int upperSite = siteId - n;
+    int lowerSite = siteId + n;
+    int leftSite = siteId - 1;
+    int rightSite = siteId + 1;
+
+    if(upperSite >= 0 && openSites[upperSite]) {
+      siteSystem.union(siteId, upperSite);
+    }
+
+    if(lowerSite < openSites.length && openSites[lowerSite]) {
+      siteSystem.union(siteId, lowerSite);
+    }
+
+    if(leftSite >= 0 && siteId % n != 0 && openSites[leftSite]) {
+      siteSystem.union(siteId, leftSite);
+    }
+
+    if(rightSite < openSites.length && (siteId + 1) % n != 0 && openSites[rightSite]) {
+      siteSystem.union(siteId, rightSite);
     }
   }
 
