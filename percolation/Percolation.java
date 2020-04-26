@@ -4,6 +4,8 @@ public class Percolation {
 
   private final WeightedQuickUnionUF siteSystem;
   private final int n;
+  private final int topVirtualSite;
+  private final int bottomVirtualSite;
   private boolean [] openSites;
   private int numberOfOpenSites;
 
@@ -13,7 +15,9 @@ public class Percolation {
       throw new IllegalArgumentException();
     }
     this.n = n;
-    siteSystem = new WeightedQuickUnionUF(n*n);
+    topVirtualSite = n*n;
+    bottomVirtualSite = n*n + 1;
+    siteSystem = new WeightedQuickUnionUF(n*n + 2);
     openSites = new boolean[n*n];
     for (int i = 0; i < (n*n); i++) {
       openSites[i] = false;
@@ -27,6 +31,7 @@ public class Percolation {
       openSites[siteId] = true;
       numberOfOpenSites++;
       uniteNearSites(siteId);
+      unionVirtual(siteId);
     }
   }
 
@@ -49,15 +54,7 @@ public class Percolation {
 
   // does the system percolate?
   public boolean percolates() {
-    boolean percolates = false;
-    int bottomSiteId = n*(n-1);
-    for (int i = 0; i < n; i++) {
-      if (isSiteFull(bottomSiteId + i)) {
-        percolates = true;
-        break;
-      }
-    }
-    return percolates;
+    return siteSystem.find(topVirtualSite) == siteSystem.find(bottomVirtualSite);
   }
 
   // test client
@@ -67,10 +64,8 @@ public class Percolation {
 
   // private methods
   private boolean isSiteFull(int siteId) {
-    for (int topSiteId = 0; topSiteId < n; topSiteId++) {
-      if (openSites[topSiteId] && siteSystem.find(topSiteId) ==  siteSystem.find(siteId)) {
-        return true;
-      }
+    if (openSites[siteId]) {
+      return siteSystem.find(siteId) == siteSystem.find(topVirtualSite);
     }
     return false;
   }
@@ -96,6 +91,15 @@ public class Percolation {
           openSites[nearSiteId]) {
         siteSystem.union(siteId, nearSiteId);
       }
+    }
+  }
+
+  private void unionVirtual(int siteId) {
+    if (siteId < n) {
+      siteSystem.union(siteId, topVirtualSite);
+    }
+    else if (siteId >= (n*n - n)) {
+      siteSystem.union(siteId, bottomVirtualSite);
     }
   }
 
