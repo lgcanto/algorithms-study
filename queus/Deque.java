@@ -62,10 +62,13 @@ public class Deque<Item> implements Iterable<Item>
         first.item = item;
         first.previous = null;
         first.next = oldFirst;
-        oldFirst.previous = first;
-        if (isEmpty())
+        if (last == null)
         {
             last = first;
+        }
+        else
+        {
+            oldFirst.previous = first;
         }
         numberOfItems++;
     }
@@ -78,7 +81,7 @@ public class Deque<Item> implements Iterable<Item>
         last.item = item;
         last.previous = oldLast;
         last.next = null;
-        if (isEmpty())
+        if (first == null)
         {
             first = last;
         }
@@ -123,6 +126,21 @@ public class Deque<Item> implements Iterable<Item>
         deque.addLast("or");
         deque.addLast("not");
         deque.addFirst("to");
+        StdOut.println("Is Deque empty: " + deque.isEmpty());
+        StdOut.println("Deque size (must equal 4): " + deque.size());
+        StdOut.println("Printing Deque, must be 'to be or not'");
+        for(Object word : deque)
+        {
+            StdOut.println(word);
+        }
+        StdOut.println("Removing first (must be 'to'): " + deque.removeFirst());
+        StdOut.println("Removing last (must be 'not'): " + deque.removeLast());
+        StdOut.println("Deque size (must equal 2): " + deque.size());
+        StdOut.println("Printing Deque, must be 'be or'");
+        for(Object word : deque)
+        {
+            StdOut.println(word);
+        }
     }
 
 }
