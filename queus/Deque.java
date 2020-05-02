@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import edu.princeton.cs.algs4.StdOut;
 
@@ -31,6 +32,10 @@ public class Deque<Item> implements Iterable<Item>
 
         public Item next()
         {
+            if(current == null)
+            {
+                throw new NoSuchElementException();
+            }
             Item item = current.item;
             current = current.next;
             return item;
@@ -57,6 +62,7 @@ public class Deque<Item> implements Iterable<Item>
     // add the item to the front
     public void addFirst(Item item)
     {
+        checkNullItem(item);
         Node oldFirst = first;
         first = new Node();
         first.item = item;
@@ -76,6 +82,7 @@ public class Deque<Item> implements Iterable<Item>
     // add the item to the back
     public void addLast(Item item)
     {
+        checkNullItem(item);
         Node oldLast = last;
         last = new Node();
         last.item = item;
@@ -95,6 +102,7 @@ public class Deque<Item> implements Iterable<Item>
     // remove and return the item from the front
     public Item removeFirst()
     {
+        checkEmptyDeck();
         Item item = first.item;
         first = first.next;
         first.previous = null;
@@ -105,6 +113,7 @@ public class Deque<Item> implements Iterable<Item>
     // remove and return the item from the back
     public Item removeLast()
     {
+        checkEmptyDeck();
         Item item = last.item;
         last = last.previous;
         last.next = null;
@@ -116,6 +125,22 @@ public class Deque<Item> implements Iterable<Item>
     public Iterator<Item> iterator()
     {
         return new DequeIterator();
+    }
+
+    private void checkNullItem(Item item)
+    {
+        if(item == null)
+        {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void checkEmptyDeck()
+    {
+        if(isEmpty())
+        {
+            throw new NoSuchElementException();
+        }
     }
 
     // unit testing (required)
