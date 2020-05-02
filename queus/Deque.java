@@ -1,5 +1,7 @@
 import java.util.Iterator;
 
+import edu.princeton.cs.algs4.StdOut;
+
 public class Deque<Item> implements Iterable<Item>
 {
 
@@ -10,6 +12,7 @@ public class Deque<Item> implements Iterable<Item>
     {
         Item item;
         Node next;
+        Node previous;
     }
 
     private class DequeIterator implements Iterator<Item>
@@ -35,7 +38,9 @@ public class Deque<Item> implements Iterable<Item>
     }
 
     // construct an empty deque
-    public Deque(){};
+    public Deque(){
+        //TODO?
+    };
 
     // is the deque empty?
     public boolean isEmpty()
@@ -55,7 +60,9 @@ public class Deque<Item> implements Iterable<Item>
         Node oldFirst = first;
         first = new Node();
         first.item = item;
+        first.previous = null;
         first.next = oldFirst;
+        oldFirst.previous = first;
         if (isEmpty())
         {
             last = first;
@@ -69,6 +76,7 @@ public class Deque<Item> implements Iterable<Item>
         Node oldLast = last;
         last = new Node();
         last.item = item;
+        last.previous = oldLast;
         last.next = null;
         if (isEmpty())
         {
@@ -86,6 +94,7 @@ public class Deque<Item> implements Iterable<Item>
     {
         Item item = first.item;
         first = first.next;
+        first.previous = null;
         numberOfItems--;
         return item;
     }
@@ -94,7 +103,8 @@ public class Deque<Item> implements Iterable<Item>
     public Item removeLast()
     {
         Item item = last.item;
-        // TODO: Maybe we're gonna need a 'previous' reference?
+        last = last.previous;
+        last.next = null;
         numberOfItems--;
         return item;
     }
@@ -107,5 +117,12 @@ public class Deque<Item> implements Iterable<Item>
 
     // unit testing (required)
     public static void main(String[] args)
+    {
+        Deque deque = new Deque<String>();
+        deque.addFirst("be");
+        deque.addLast("or");
+        deque.addLast("not");
+        deque.addFirst("to");
+    }
 
 }
