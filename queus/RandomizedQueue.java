@@ -122,7 +122,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // return an independent iterator over items in random order
     public Iterator<Item> iterator()
     {
-        StdRandom.shuffle(queue, 0, numberOfItems - 1);
+        if(!isEmpty())
+        {
+            StdRandom.shuffle(queue, 0, numberOfItems - 1);
+        }
         return new RandomizedQueueIterator();
     }
 
@@ -130,6 +133,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public static void main(String[] args)
     {
         RandomizedQueue<String> randomizedQueue = new RandomizedQueue<String>();
+        StdOut.println("Calling iterator() when randomized queue is empty:");
+        for (Object word : randomizedQueue)
+        {
+            StdOut.println(word);
+        }
         randomizedQueue.enqueue("to");
         randomizedQueue.enqueue("be");
         randomizedQueue.enqueue("or");
