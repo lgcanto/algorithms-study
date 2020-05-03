@@ -25,7 +25,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public Item next()
         {
-            if (i < 0)
+            if (i < 1)
             {
                 throw new NoSuchElementException();
             }
