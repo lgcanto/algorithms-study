@@ -45,7 +45,7 @@ public class Deque<Item> implements Iterable<Item>
     // construct an empty deque
     public Deque()
     {
-        //TODO?
+        // TODO?
     };
 
     // is the deque empty?
@@ -147,7 +147,7 @@ public class Deque<Item> implements Iterable<Item>
     // unit testing (required)
     public static void main(String[] args)
     {
-        Deque deque = new Deque<String>();
+        Deque<String> deque = new Deque<String>();
         deque.addFirst("be");
         deque.addLast("or");
         deque.addLast("not");

@@ -25,7 +25,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public Item next()
         {
-            if ( i < 0)
+            if (i < 0)
             {
                 throw new NoSuchElementException();
             }
@@ -129,7 +129,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // unit testing (required)
     public static void main(String[] args)
     {
-        RandomizedQueue randomizedQueue = new RandomizedQueue<String>();
+        RandomizedQueue<String> randomizedQueue = new RandomizedQueue<String>();
         randomizedQueue.enqueue("to");
         randomizedQueue.enqueue("be");
         randomizedQueue.enqueue("or");

@@ -5,7 +5,7 @@ public class Permutation {
    public static void main(String[] args)
    {
       int k = Integer.parseInt(args[0]);
-      RandomizedQueue randomizedQueue = new RandomizedQueue<String>();
+      RandomizedQueue<String> randomizedQueue = new RandomizedQueue<String>();
 
       while (!StdIn.isEmpty())
       {
