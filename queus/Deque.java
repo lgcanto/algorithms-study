@@ -32,7 +32,7 @@ public class Deque<Item> implements Iterable<Item>
 
         public Item next()
         {
-            if(current == null)
+            if (current == null)
             {
                 throw new NoSuchElementException();
             }
@@ -43,7 +43,8 @@ public class Deque<Item> implements Iterable<Item>
     }
 
     // construct an empty deque
-    public Deque(){
+    public Deque()
+    {
         //TODO?
     };
 
@@ -129,7 +130,7 @@ public class Deque<Item> implements Iterable<Item>
 
     private void checkNullItem(Item item)
     {
-        if(item == null)
+        if (item == null)
         {
             throw new IllegalArgumentException();
         }
@@ -137,7 +138,7 @@ public class Deque<Item> implements Iterable<Item>
 
     private void checkEmptyDeck()
     {
-        if(isEmpty())
+        if (isEmpty())
         {
             throw new NoSuchElementException();
         }
@@ -151,10 +152,10 @@ public class Deque<Item> implements Iterable<Item>
         deque.addLast("or");
         deque.addLast("not");
         deque.addFirst("to");
-        StdOut.println("Is Deque empty: " + deque.isEmpty());
+        StdOut.println("Is Deque empty (must be false): " + deque.isEmpty());
         StdOut.println("Deque size (must equal 4): " + deque.size());
         StdOut.println("Printing Deque, must be 'to be or not'");
-        for(Object word : deque)
+        for (Object word : deque)
         {
             StdOut.println(word);
         }
@@ -162,7 +163,7 @@ public class Deque<Item> implements Iterable<Item>
         StdOut.println("Removing last (must be 'not'): " + deque.removeLast());
         StdOut.println("Deque size (must equal 2): " + deque.size());
         StdOut.println("Printing Deque, must be 'be or'");
-        for(Object word : deque)
+        for (Object word : deque)
         {
             StdOut.println(word);
         }
