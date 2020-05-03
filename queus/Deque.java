@@ -46,7 +46,7 @@ public class Deque<Item> implements Iterable<Item>
     public Deque()
     {
         // TODO?
-    };
+    }
 
     // is the deque empty?
     public boolean isEmpty()
@@ -106,7 +106,14 @@ public class Deque<Item> implements Iterable<Item>
         checkEmptyDeck();
         Item item = first.item;
         first = first.next;
-        first.previous = null;
+        if (first != null)
+        {
+            first.previous = null;
+        }
+        else
+        {
+            last = null;
+        }
         numberOfItems--;
         return item;
     }
@@ -117,7 +124,14 @@ public class Deque<Item> implements Iterable<Item>
         checkEmptyDeck();
         Item item = last.item;
         last = last.previous;
-        last.next = null;
+        if (last != null)
+        {
+            last.next = null;
+        }
+        else
+        {
+            first = null;
+        }
         numberOfItems--;
         return item;
     }
@@ -148,6 +162,11 @@ public class Deque<Item> implements Iterable<Item>
     public static void main(String[] args)
     {
         Deque<String> deque = new Deque<String>();
+        StdOut.println("Is Deque empty (must be true): " + deque.isEmpty());
+        deque.addFirst("be");
+        StdOut.println("Is Deque empty (must be false): " + deque.isEmpty());
+        StdOut.println("Removing first (must be 'be'): " + deque.removeFirst());
+        StdOut.println("Is Deque empty (must be true): " + deque.isEmpty());
         deque.addFirst("be");
         deque.addLast("or");
         deque.addLast("not");
