@@ -1,30 +1,31 @@
 public class BruteCollinearPoints {
    private int numberOfSegments = 0;
    private LineSegment[] lineSegments;
-   private Point[] scannedPoints;
+   private boolean[] isSegmentPoint;
 
    public BruteCollinearPoints(Point[] points) {  // finds all line segments containing 4 points
       if (points == null ) {
          throw new IllegalArgumentException();
       }
 
-      scannedPoints = new Point[points.length];
+      isSegmentPoint = new boolean[points.length];
 
       for (int i = 1; i < points.length; i++) {
          Point aPoint = points[i];
-
-         if(isPointAlreadyCollinear(points[i])) {
+         checkPoint(aPoint);
+         if (isSegmentPoint[i]) {
             continue;
          }
 
-         Point beginPoint = aPoint;
-         Point endPoint = null;
-         Double[] slopes = new Double[3];
-         int slopeCounter = 0;
+         Point[] beginEndPoint = new Point[]{aPoint, null};
+         Double collinearSlope = null;
+         int[] collinearPointIndexes = new int[4];
+         collinearPointIndexes[0] = i;
+         int collinearPointsCounter = 1;
 
          for (int j = i + 1; j < points.length; j++) {
             Point bPoint = points[j];
-            if(isPointAlreadyCollinear(bPoint)) {
+            if (isSegmentPoint[j]) {
                continue;
             }
 
@@ -33,31 +34,17 @@ public class BruteCollinearPoints {
                throw new IllegalArgumentException();
             }
 
-            if (slopeCounter > 0 && slopes[slopeCounter-1] != slopes[slopeCounter]) {
-               continue;
-            }
-            else {
-               slopes[slopeCounter] = currentSlope;
-               slopeCounter++;
+            if (collinearSlope == null || collinearSlope.equals(currentSlope)) {
+               collinearSlope = currentSlope;
+               collinearPointsCounter++;
+               collinearPointIndexes[collinearPointsCounter - 1] = j;
 
-               if (beginPoint.compareTo(bPoint) == 1) {
-                  if (endPoint == null) {
-                     endPoint = beginPoint;
-                  }
-                  beginPoint = bPoint;
-               }
-               else if (beginPoint.compareTo(bPoint) == 0) {
-                  throw new IllegalArgumentException();
-               }
-               else if (endPoint == null || bPoint.compareTo(endPoint) == 1) {
-                  endPoint = bPoint;
-               }
-               else if (bPoint.compareTo(endPoint) == 0) {
-                  throw new IllegalArgumentException();
-               }
+               beginEndPoint = getNewBeginEndPoint(beginEndPoint, bPoint);
 
-               if (slopeCounter == 3) {
-                  insertNewLineSegment(beginPoint, endPoint);
+               if (collinearPointsCounter == 4) {
+                  addSegmentPoints(collinearPointIndexes);
+                  insertNewLineSegment(beginEndPoint[0], beginEndPoint[1]);
+                  numberOfSegments++;
                }
             }
          }
@@ -88,16 +75,38 @@ public class BruteCollinearPoints {
       }
    }
 
-   private boolean isPointAlreadyCollinear(Point point) {
+   private Point[] getNewBeginEndPoint(Point[] beginEndPoint, Point newPoint) {
+      Point beginPoint = beginEndPoint[0];
+      Point endPoint = beginEndPoint[1];
+      Point newBeginPoint = null;
+      Point newEndPoint = null;
+      if (beginPoint.compareTo(newPoint) > 0) {
+         if (endPoint == null) {
+            newEndPoint = beginPoint;
+         }
+         newBeginPoint = newPoint;
+      }
+      else if (beginPoint.compareTo(newPoint) == 0) {
+         throw new IllegalArgumentException();
+      }
+      else if (endPoint == null || newPoint.compareTo(endPoint) > 0) {
+         newEndPoint = newPoint;
+      }
+      else if (newPoint.compareTo(endPoint) == 0) {
+         throw new IllegalArgumentException();
+      }
+      return new Point[]{newBeginPoint, newEndPoint};
+   }
+
+   private void addSegmentPoints(int[] indexes) {
+      for (int index : indexes) {
+         isSegmentPoint[index] = true;
+      }
+   }
+
+   private void checkPoint(Point point) {
       if (point == null ) {
          throw new IllegalArgumentException();
       }
-
-      for (int i = 0; i < scannedPoints.length; i++) {
-         if (point.equals(scannedPoints[i])) {
-            return true;
-         }
-      }
-      return false;
    }
 }
