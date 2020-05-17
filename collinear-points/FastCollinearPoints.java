@@ -5,56 +5,36 @@ public class FastCollinearPoints {
    private LineSegment[] lineSegments;
 
    public FastCollinearPoints(Point[] points) {  // finds all line segments containing 4 or more points
-      if (points == null ) {
-         throw new IllegalArgumentException();
-      }
+      checkPoints(points);
 
       for (int i = 0; i < points.length; i++) {
          Point aPoint = points[i];
-         checkNullPoint(aPoint);
-         Point beginPoint = aPoint;
-         Point endPoint = null;
+         checkPoint(aPoint);
+
+         Point[] beginEndPoint = new Point[]{aPoint, null};
          Double collinearSlope = null;
-         int slopeCounter = 0;
+         int collinearPointsCounter = 1;
+
          Point[] sortedPoints = points;
          Arrays.sort(sortedPoints, aPoint.slopeOrder());
          for (int j = 1; j < sortedPoints.length; j++) {
             Point bPoint = points[j];
             Double currentSlope = aPoint.slopeTo(bPoint);
             checkSlope(currentSlope);
-            if (collinearSlope == currentSlope) {
-               slopeCounter++;
-               if (beginPoint.compareTo(bPoint) == 1) {
-                  if (endPoint == null) {
-                     endPoint = beginPoint;
-                  }
-                  beginPoint = bPoint;
-               }
-               else if (beginPoint.compareTo(bPoint) == 0) {
-                  throw new IllegalArgumentException();
-               }
-               else if (endPoint == null || bPoint.compareTo(endPoint) == 1) {
-                  endPoint = bPoint;
-               }
-               else if (bPoint.compareTo(endPoint) == 0) {
-                  throw new IllegalArgumentException();
-               }
+            if (collinearSlope == null || collinearSlope.equals(currentSlope)) {
+               collinearSlope = currentSlope;
+               collinearPointsCounter++;
+
+               beginEndPoint = getNewBeginEndPoint(beginEndPoint, bPoint);
             }
-            else if (slopeCounter > 2) {
-               insertNewLineSegment(beginPoint, endPoint);
+            else if (collinearPointsCounter > 3) {
+               insertNewLineSegment(beginEndPoint[0], beginEndPoint[1]);
                break;
             }
             else {
                collinearSlope = currentSlope;
-               slopeCounter = 1;
-               if (aPoint.compareTo(bPoint) == 1) {
-                  beginPoint = bPoint;
-                  endPoint = aPoint;
-               }
-               else {
-                  beginPoint = aPoint;
-                  endPoint = bPoint;
-               }
+               collinearPointsCounter = 2;
+               beginEndPoint = getNewBeginEndPoint(new Point[]{aPoint, null}, bPoint);
             }
          }
       }
@@ -84,14 +64,43 @@ public class FastCollinearPoints {
       }
    }
 
+   private Point[] getNewBeginEndPoint(Point[] beginEndPoint, Point newPoint) {
+      Point beginPoint = beginEndPoint[0];
+      Point endPoint = beginEndPoint[1];
+      Point newBeginPoint = beginPoint;
+      Point newEndPoint = endPoint;
+      if (beginPoint.compareTo(newPoint) > 0) {
+         if (endPoint == null) {
+            newEndPoint = beginPoint;
+         }
+         newBeginPoint = newPoint;
+      }
+      else if (beginPoint.compareTo(newPoint) == 0) {
+         throw new IllegalArgumentException();
+      }
+      else if (endPoint == null || newPoint.compareTo(endPoint) > 0) {
+         newEndPoint = newPoint;
+      }
+      else if (newPoint.compareTo(endPoint) == 0) {
+         throw new IllegalArgumentException();
+      }
+      return new Point[]{newBeginPoint, newEndPoint};
+   }
+
    private void checkSlope(Double slope) {
       if (slope == Double.NEGATIVE_INFINITY) {
          throw new IllegalArgumentException();
       }
    }
 
-   private void checkNullPoint(Point point) {
+   private void checkPoint(Point point) {
       if (point == null ) {
+         throw new IllegalArgumentException();
+      }
+   }
+
+   private void checkPoints(Point[] points) {
+      if (points == null ) {
          throw new IllegalArgumentException();
       }
    }

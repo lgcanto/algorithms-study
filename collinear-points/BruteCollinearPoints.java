@@ -4,15 +4,14 @@ public class BruteCollinearPoints {
    private boolean[] isSegmentPoint;
 
    public BruteCollinearPoints(Point[] points) {  // finds all line segments containing 4 points
-      if (points == null ) {
-         throw new IllegalArgumentException();
-      }
+      checkPoints(points);
 
       isSegmentPoint = new boolean[points.length];
 
-      for (int i = 1; i < points.length; i++) {
+      for (int i = 0; i < points.length; i++) {
          Point aPoint = points[i];
          checkPoint(aPoint);
+
          if (isSegmentPoint[i]) {
             continue;
          }
@@ -30,9 +29,7 @@ public class BruteCollinearPoints {
             }
 
             Double currentSlope = aPoint.slopeTo(bPoint);
-            if (currentSlope == Double.NEGATIVE_INFINITY) {
-               throw new IllegalArgumentException();
-            }
+            checkSlope(currentSlope);
 
             if (collinearSlope == null || collinearSlope.equals(currentSlope)) {
                collinearSlope = currentSlope;
@@ -44,7 +41,7 @@ public class BruteCollinearPoints {
                if (collinearPointsCounter == 4) {
                   addSegmentPoints(collinearPointIndexes);
                   insertNewLineSegment(beginEndPoint[0], beginEndPoint[1]);
-                  numberOfSegments++;
+                  break;
                }
             }
          }
@@ -78,8 +75,8 @@ public class BruteCollinearPoints {
    private Point[] getNewBeginEndPoint(Point[] beginEndPoint, Point newPoint) {
       Point beginPoint = beginEndPoint[0];
       Point endPoint = beginEndPoint[1];
-      Point newBeginPoint = null;
-      Point newEndPoint = null;
+      Point newBeginPoint = beginPoint;
+      Point newEndPoint = endPoint;
       if (beginPoint.compareTo(newPoint) > 0) {
          if (endPoint == null) {
             newEndPoint = beginPoint;
@@ -104,8 +101,20 @@ public class BruteCollinearPoints {
       }
    }
 
+   private void checkSlope(Double slope) {
+      if (slope == Double.NEGATIVE_INFINITY) {
+         throw new IllegalArgumentException();
+      }
+   }
+
    private void checkPoint(Point point) {
       if (point == null ) {
+         throw new IllegalArgumentException();
+      }
+   }
+
+   private void checkPoints(Point[] points) {
+      if (points == null ) {
          throw new IllegalArgumentException();
       }
    }
