@@ -89,7 +89,7 @@ public class Point implements Comparable<Point> {
             return -1;
         }
         else if (this.y > that.y || (this.y == that.y && this.x > that.x)) {
-            return -1;
+            return 1;
         }
         else {
             return 0;
@@ -133,6 +133,16 @@ public class Point implements Comparable<Point> {
     public String toString() {
         /* DO NOT MODIFY */
         return "(" + x + ", " + y + ")";
+    }
+
+    // This should exist, shouldn't?
+    public boolean equals(Point that) {
+        if (that.x == this.x && that.y == this.y) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
