@@ -15,9 +15,8 @@ public class FastCollinearPoints {
          Double collinearSlope = null;
          int collinearPointsCounter = 1;
 
-         Point[] sortedPoints = points;
-         Arrays.sort(sortedPoints, aPoint.slopeOrder());
-         for (int j = 1; j < sortedPoints.length; j++) {
+         Arrays.sort(points, aPoint.slopeOrder());
+         for (int j = 1; j < points.length; j++) {
             Point bPoint = points[j];
             Double currentSlope = aPoint.slopeTo(bPoint);
             checkSlope(currentSlope);
@@ -29,6 +28,7 @@ public class FastCollinearPoints {
             }
             else if (collinearPointsCounter > 3) {
                insertNewLineSegment(beginEndPoint[0], beginEndPoint[1]);
+               i = j - 1;
                break;
             }
             else {
