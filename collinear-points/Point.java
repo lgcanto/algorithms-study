@@ -139,7 +139,7 @@ public class Point implements Comparable<Point> {
     }
 
     // This should exist, shouldn't?
-    public boolean equals(Point that) {
+    private boolean equals(Point that) {
         if (that.x == this.x && that.y == this.y) {
             return true;
         }
