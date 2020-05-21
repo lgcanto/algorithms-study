@@ -16,7 +16,7 @@ public class BruteCollinearPoints {
             continue;
          }
 
-         Point[] beginEndPoint = new Point[]{aPoint, null};
+         Point[] beginEndPoint = { aPoint, null };
          Double collinearSlope = null;
          int[] collinearPointIndexes = new int[4];
          collinearPointIndexes[0] = i;
@@ -53,7 +53,7 @@ public class BruteCollinearPoints {
    }
 
    public LineSegment[] segments() {              // the line segments
-      return lineSegments;
+      return lineSegments.clone();
    }
 
    private void insertNewLineSegment(Point beginPoint, Point endPoint) {
@@ -108,13 +108,13 @@ public class BruteCollinearPoints {
    }
 
    private void checkPoint(Point point) {
-      if (point == null ) {
+      if (point == null) {
          throw new IllegalArgumentException();
       }
    }
 
    private void checkPoints(Point[] points) {
-      if (points == null ) {
+      if (points == null) {
          throw new IllegalArgumentException();
       }
    }

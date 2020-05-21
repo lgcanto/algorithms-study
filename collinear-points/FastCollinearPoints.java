@@ -11,7 +11,7 @@ public class FastCollinearPoints {
          Point aPoint = points[i];
          checkPoint(aPoint);
 
-         Point[] beginEndPoint = new Point[]{aPoint, null};
+         Point[] beginEndPoint = { aPoint, null };
          Double collinearSlope = null;
          int collinearPointsCounter = 1;
 
@@ -44,7 +44,7 @@ public class FastCollinearPoints {
    }
 
    public LineSegment[] segments() {              // the line segments
-      return lineSegments;
+      return lineSegments.clone();
    }
 
    private void insertNewLineSegment(Point beginPoint, Point endPoint) {
@@ -93,13 +93,13 @@ public class FastCollinearPoints {
    }
 
    private void checkPoint(Point point) {
-      if (point == null ) {
+      if (point == null) {
          throw new IllegalArgumentException();
       }
    }
 
    private void checkPoints(Point[] points) {
-      if (points == null ) {
+      if (points == null) {
          throw new IllegalArgumentException();
       }
    }

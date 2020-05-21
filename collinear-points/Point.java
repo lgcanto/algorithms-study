@@ -138,34 +138,24 @@ public class Point implements Comparable<Point> {
         return "(" + x + ", " + y + ")";
     }
 
-    // This should exist, shouldn't?
-    private boolean equals(Point that) {
-        if (that.x == this.x && that.y == this.y) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
     /**
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        StdOut.println("Creating point A in (1,1)");
-        Point aPoint = new Point(1,1);
-        StdOut.println("Creating point B in (2,2)");
-        Point bPoint = new Point(2,2);
+        StdOut.println("Creating point A in (1, 1)");
+        Point aPoint = new Point(1, 1);
+        StdOut.println("Creating point B in (2, 2)");
+        Point bPoint = new Point(2, 2);
         StdOut.println("Slope between A and B (must be 1: )");
         Double slopeAB = aPoint.slopeTo(bPoint);
         StdOut.println(slopeAB.toString());
-        StdOut.println("Creating point C in (2,3)");
-        Point cPoint = new Point(2,3);
-        StdOut.println("Creating point D in (2,4)");
-        Point dPoint = new Point(2,4);
+        StdOut.println("Creating point C in (2, 3)");
+        Point cPoint = new Point(2, 3);
+        StdOut.println("Creating point D in (2, 4)");
+        Point dPoint = new Point(2, 4);
         StdOut.println("Ordering B, C and D by their slope between A");
-        Point[] points = new Point[]{ bPoint, dPoint, cPoint };
-        StdOut.println("Printing ordered array, must be (2,2), (2,3) and (2,4)");
+        Point[] points = { bPoint, dPoint, cPoint };
+        StdOut.println("Printing ordered array, must be (2, 2), (2, 3) and (2, 4)");
         Arrays.sort(points, aPoint.slopeOrder());
         for (int i = 0; i < points.length; i++) {
             StdOut.println(points[i].toString());
