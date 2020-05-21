@@ -28,7 +28,6 @@ public class FastCollinearPoints {
             }
             else if (collinearPointsCounter > 3) {
                insertNewLineSegment(beginEndPoint[0], beginEndPoint[1]);
-               i = j - 1;
                break;
             }
             else {
