@@ -48,7 +48,7 @@ public class FastCollinearPoints {
          return lineSegments.clone();
       }
       else {
-         return null;
+         return new LineSegment[0];
       }
    }
 

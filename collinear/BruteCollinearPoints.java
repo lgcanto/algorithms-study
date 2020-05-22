@@ -57,7 +57,7 @@ public class BruteCollinearPoints {
          return lineSegments.clone();
       }
       else {
-         return null;
+         return new LineSegment[0];
       }
    }
 
