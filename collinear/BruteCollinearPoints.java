@@ -53,7 +53,12 @@ public class BruteCollinearPoints {
    }
 
    public LineSegment[] segments() {              // the line segments
-      return lineSegments.clone();
+      if (lineSegments != null) {
+         return lineSegments.clone();
+      }
+      else {
+         return null;
+      }
    }
 
    private void insertNewLineSegment(Point beginPoint, Point endPoint) {
