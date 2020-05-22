@@ -21,7 +21,7 @@ public class FastCollinearPoints {
             Point bPoint = points[j];
             double currentSlope = aPoint.slopeTo(bPoint);
             checkSlope(currentSlope);
-            if (firstSlope || collinearSlope == currentSlope) {
+            if (firstSlope || Double.compare(collinearSlope, currentSlope) == 0) {
                firstSlope = false;
                collinearSlope = currentSlope;
                collinearPointsCounter++;
@@ -93,7 +93,7 @@ public class FastCollinearPoints {
       return new Point[]{newBeginPoint, newEndPoint};
    }
 
-   private void checkSlope(Double slope) {
+   private void checkSlope(double slope) {
       if (slope == Double.NEGATIVE_INFINITY) {
          throw new IllegalArgumentException();
       }

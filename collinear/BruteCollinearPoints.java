@@ -32,7 +32,7 @@ public class BruteCollinearPoints {
             double currentSlope = aPoint.slopeTo(bPoint);
             checkSlope(currentSlope);
 
-            if (firstSlope || collinearSlope == currentSlope) {
+            if (firstSlope || Double.compare(collinearSlope, currentSlope) == 0) {
                firstSlope = false;
                collinearSlope = currentSlope;
                collinearPointsCounter++;
@@ -108,7 +108,7 @@ public class BruteCollinearPoints {
       }
    }
 
-   private void checkSlope(Double slope) {
+   private void checkSlope(double slope) {
       if (slope == Double.NEGATIVE_INFINITY) {
          throw new IllegalArgumentException();
       }
