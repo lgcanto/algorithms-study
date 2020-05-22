@@ -111,8 +111,8 @@ public class Point implements Comparable<Point> {
 
     private class PointSlopeOrder implements Comparator<Point> {
         public int compare(Point a, Point b) {
-            Double aSlope = slopeTo(a);
-            Double bSlope = slopeTo(b);
+            double aSlope = slopeTo(a);
+            double bSlope = slopeTo(b);
 
             if (aSlope < bSlope) {
                 return -1;
@@ -147,8 +147,8 @@ public class Point implements Comparable<Point> {
         StdOut.println("Creating point B in (2, 2)");
         Point bPoint = new Point(2, 2);
         StdOut.println("Slope between A and B (must be 1: )");
-        Double slopeAB = aPoint.slopeTo(bPoint);
-        StdOut.println(slopeAB.toString());
+        double slopeAB = aPoint.slopeTo(bPoint);
+        StdOut.println(slopeAB);
         StdOut.println("Creating point C in (2, 3)");
         Point cPoint = new Point(2, 3);
         StdOut.println("Creating point D in (2, 4)");

@@ -17,7 +17,8 @@ public class BruteCollinearPoints {
          }
 
          Point[] beginEndPoint = { aPoint, null };
-         Double collinearSlope = null;
+         double collinearSlope = 0;
+         boolean firstSlope = true;
          int[] collinearPointIndexes = new int[4];
          collinearPointIndexes[0] = i;
          int collinearPointsCounter = 1;
@@ -28,10 +29,11 @@ public class BruteCollinearPoints {
                continue;
             }
 
-            Double currentSlope = aPoint.slopeTo(bPoint);
+            double currentSlope = aPoint.slopeTo(bPoint);
             checkSlope(currentSlope);
 
-            if (collinearSlope == null || collinearSlope.equals(currentSlope)) {
+            if (firstSlope || collinearSlope == currentSlope) {
+               firstSlope = false;
                collinearSlope = currentSlope;
                collinearPointsCounter++;
                collinearPointIndexes[collinearPointsCounter - 1] = j;

@@ -12,15 +12,17 @@ public class FastCollinearPoints {
          checkPoint(aPoint);
 
          Point[] beginEndPoint = { aPoint, null };
-         Double collinearSlope = null;
+         double collinearSlope = 0;
+         boolean firstSlope = true;
          int collinearPointsCounter = 1;
 
          Arrays.sort(points, aPoint.slopeOrder());
          for (int j = 1; j < points.length; j++) {
             Point bPoint = points[j];
-            Double currentSlope = aPoint.slopeTo(bPoint);
+            double currentSlope = aPoint.slopeTo(bPoint);
             checkSlope(currentSlope);
-            if (collinearSlope == null || collinearSlope.equals(currentSlope)) {
+            if (firstSlope || collinearSlope == currentSlope) {
+               firstSlope = false;
                collinearSlope = currentSlope;
                collinearPointsCounter++;
 
