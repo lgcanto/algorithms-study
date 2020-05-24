@@ -19,11 +19,12 @@ public class TestClient {
     StdDraw.enableDoubleBuffering();
     StdDraw.setXscale(0, 32768);
     StdDraw.setYscale(0, 32768);
+    StdDraw.setPenRadius(0.01);
     for (Point p : points) {
         p.draw();
     }
     StdDraw.show();
-
+    StdDraw.setPenRadius(0.0015);
     // print and draw the line segments
 //    FastCollinearPoints collinear = new FastCollinearPoints(points);
     BruteCollinearPoints collinear = new BruteCollinearPoints(points);
