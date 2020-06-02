@@ -6,7 +6,7 @@ public class FastCollinearPoints {
 
    public FastCollinearPoints(Point[] points) {  // finds all line segments containing 4 or more points
       checkPoints(points);
-
+      Point[] sortedPoints = points.clone();
       for (int i = 0; i < points.length; i++) {
          Point aPoint = points[i];
          checkPoint(aPoint);
@@ -16,9 +16,9 @@ public class FastCollinearPoints {
          boolean firstSlope = true;
          int collinearPointsCounter = 1;
 
-         Arrays.sort(points, aPoint.slopeOrder());
-         for (int j = 1; j < points.length; j++) {
-            Point bPoint = points[j];
+         Arrays.sort(sortedPoints, aPoint.slopeOrder());
+         for (int j = 1; j < sortedPoints.length; j++) {
+            Point bPoint = sortedPoints[j];
             double currentSlope = aPoint.slopeTo(bPoint);
             checkSlope(currentSlope);
             if (firstSlope || Double.compare(collinearSlope, currentSlope) == 0) {
@@ -27,17 +27,21 @@ public class FastCollinearPoints {
                collinearPointsCounter++;
 
                beginEndPoint = getNewBeginEndPoint(beginEndPoint, bPoint);
-            }
-            else if (collinearPointsCounter > 3) {
-               insertNewLineSegment(beginEndPoint[0], beginEndPoint[1]);
-               break;
+
+               if (collinearPointsCounter > 3 && j == (sortedPoints.length - 1)) {
+                  insertNewLineSegment(beginEndPoint);
+               }
             }
             else {
+               if (collinearPointsCounter > 3) {
+                  insertNewLineSegment(beginEndPoint);
+               }
                collinearSlope = currentSlope;
                collinearPointsCounter = 2;
                beginEndPoint = getNewBeginEndPoint(new Point[]{aPoint, null}, bPoint);
             }
          }
+         sortedPoints = removePointFromArray(sortedPoints, aPoint);
       }
    }
 
@@ -54,8 +58,22 @@ public class FastCollinearPoints {
       }
    }
 
-   private void insertNewLineSegment(Point beginPoint, Point endPoint) {
-      LineSegment lineSegment = new LineSegment(beginPoint, endPoint);
+   private Point[] removePointFromArray(Point[] points, Point point) {
+      Point[] newPoints = new Point[points.length - 1];
+      int j = 0;
+      for (int i = 0; i < newPoints.length; i++)
+      {
+         if (point.compareTo(points[j]) == 0) {
+            j++;
+         }
+         newPoints[i] = points[j];
+         j++;
+      }
+      return newPoints;
+   }
+
+   private void insertNewLineSegment(Point[] beginEndPoint) {
+      LineSegment lineSegment = new LineSegment(beginEndPoint[0], beginEndPoint[1]);
       numberOfSegments++;
       if (lineSegments != null) {
          LineSegment[] newLineSegments = new LineSegment[numberOfSegments];

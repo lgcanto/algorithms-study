@@ -26,8 +26,8 @@ public class TestClient {
     StdDraw.show();
     StdDraw.setPenRadius(0.0015);
     // print and draw the line segments
-//    FastCollinearPoints collinear = new FastCollinearPoints(points);
-    BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+    FastCollinearPoints collinear = new FastCollinearPoints(points);
+//    BruteCollinearPoints collinear = new BruteCollinearPoints(points);
     for (LineSegment segment : collinear.segments()) {
         StdOut.println(segment);
         segment.draw();

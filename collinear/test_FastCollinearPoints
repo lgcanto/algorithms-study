@@ -1,0 +1,109 @@
+import java.util.Arrays;
+
+public class FastCollinearPoints {
+   private int numberOfSegments = 0;
+   private LineSegment[] lineSegments = new LineSegment[0];
+
+   public FastCollinearPoints(Point[] points) {  // finds all line segments containing 4 or more points
+      checkPoints(points);
+      for (int a = 0; a < points.length; a++) {
+         Point aPoint = points[a];
+         checkPoint(aPoint);
+         Arrays.sort(points, aPoint.slopeOrder());
+         for (int b = 1; b < points.length; b++) {
+            Point bPoint = points[b];
+            checkPoint(bPoint);
+            double abSlope = aPoint.slopeTo(bPoint);
+            checkSlope(abSlope);
+            int collinearPoints = 2;
+            Point[] beginEndPoint = { aPoint, null };
+            beginEndPoint = getNewBeginEndPoint(beginEndPoint, bPoint);
+            for (int k = b + 1; k < points.length; k++) {
+               Point kPoint = points[k];
+               checkPoint(kPoint);
+               double kSlope = aPoint.slopeTo(kPoint);
+               checkSlope(kSlope);
+               if (Double.compare(abSlope, kSlope) == 0) {
+                  collinearPoints++;
+                  beginEndPoint = getNewBeginEndPoint(beginEndPoint, kPoint);
+                  if (collinearPoints > 3 && k == points.length - 1) {
+                     LineSegment lineSegment = new LineSegment(beginEndPoint[0], beginEndPoint[1]);
+                     insertNewLineSegment(lineSegment);
+                  }
+               }
+               else if (collinearPoints > 3) {
+                  LineSegment lineSegment = new LineSegment(beginEndPoint[0], beginEndPoint[1]);
+                  insertNewLineSegment(lineSegment);
+               }
+               else {
+                  break;
+               }
+            }
+         }
+      }
+   }
+
+   public int numberOfSegments() {      // the number of line segments
+      return numberOfSegments;
+   }
+
+   public LineSegment[] segments() {              // the line segments
+      if (lineSegments != null) {
+         return lineSegments.clone();
+      }
+      else {
+         return new LineSegment[0];
+      }
+   }
+
+   private void insertNewLineSegment(LineSegment lineSegment) {
+      numberOfSegments++;
+      LineSegment[] newLineSegments = new LineSegment[numberOfSegments];
+      for (int i = 0; i < lineSegments.length; i++) {
+         newLineSegments[i] = lineSegments[i];
+      }
+      newLineSegments[numberOfSegments - 1] = lineSegment;
+      lineSegments = newLineSegments;
+   }
+
+   private Point[] getNewBeginEndPoint(Point[] beginEndPoint, Point newPoint) {
+      Point beginPoint = beginEndPoint[0];
+      Point endPoint = beginEndPoint[1];
+      Point newBeginPoint = beginPoint;
+      Point newEndPoint = endPoint;
+      if (beginPoint.compareTo(newPoint) > 0) {
+         if (endPoint == null) {
+            newEndPoint = beginPoint;
+         }
+         newBeginPoint = newPoint;
+      }
+      else if (beginPoint.compareTo(newPoint) == 0) {
+         throw new IllegalArgumentException();
+      }
+      else if (endPoint == null || newPoint.compareTo(endPoint) > 0) {
+         newEndPoint = newPoint;
+      }
+      else if (newPoint.compareTo(endPoint) == 0) {
+         throw new IllegalArgumentException();
+      }
+      return new Point[]{newBeginPoint, newEndPoint};
+   }
+
+   private void checkSlope(double slope) {
+      if (slope == Double.NEGATIVE_INFINITY) {
+         throw new IllegalArgumentException();
+      }
+   }
+
+   private void checkPoint(Point point) {
+      if (point == null) {
+         throw new IllegalArgumentException();
+      }
+   }
+
+   private void checkPoints(Point[] points) {
+      if (points == null) {
+         throw new IllegalArgumentException();
+      }
+   }
+}
