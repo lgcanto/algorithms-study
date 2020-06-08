@@ -1,33 +1,66 @@
 public class Board {
 
+    private final int dimension;
+    private final int[][] tiles;
+
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
-        // TODO
+        this.tiles = tiles;
+        dimension = tiles.length;
     }
                                            
     // string representation of this board
     public String toString() {
-        // TODO
-        return "";
+        String boardString = String.valueOf(dimension());
+        for (int i = 0; i < dimension; i++) {
+            boardString.concat("\n ");
+            for (int j = 0; j < dimension; j++) {
+                boardString.concat(" ");
+                boardString.concat(String.valueOf(tiles[i][j]));
+                boardString.concat(" ");
+            }
+        }
+        return boardString;
     }
 
     // board dimension n
     public int dimension() {
-        // TODO
-        return 0;
+        return dimension;
     }
 
     // number of tiles out of place
     public int hamming() {
-        // TODO
-        return 0;
+        int hamming = 0;
+        for (int i = 0; i < dimension(); i++) {
+            for (int j = 0; j < dimension(); j++) {
+                int tileValue = tiles[i][j];
+                int correctTileValue = j + i*dimension + 1;
+                if (tileValue != 0 && tileValue != correctTileValue) {
+                    hamming++;
+                }
+            }
+        }
+        return hamming;
     }
 
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
-        // TODO
-        return 0;
+        int manhattan = 0;
+        for (int i = 0; i < dimension(); i++) {
+            for (int j = 0; j < dimension(); j++) {
+                int tileValue = tiles[i][j];
+                int correctTileValue = j + i*dimension + 1;
+                if (tileValue != 0 && tileValue != correctTileValue) {
+                    int mDistance = 0;
+                    int correctI = 0; //TODO: use dimension and correctTileValue as inputs
+                    int correctJ = 0; //TODO: use dimension and correctTileValue as inputs
+                    mDistance = Math.abs(correctI - i) + Math.abs(correctJ - j);
+                    manhattan = manhattan + mDistance;
+                }
+            }
+        }
+        return manhattan;
     }
 
     // is this board the goal board?
