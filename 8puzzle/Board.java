@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
 
     private final int dimension;
@@ -32,8 +35,8 @@ public class Board {
     // number of tiles out of place
     public int hamming() {
         int hamming = 0;
-        for (int i = 0; i < dimension(); i++) {
-            for (int j = 0; j < dimension(); j++) {
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
                 int tileValue = tiles[i][j];
                 int correctTileValue = j + i*dimension + 1;
                 if (tileValue != 0 && tileValue != correctTileValue) {
@@ -52,10 +55,8 @@ public class Board {
                 int tileValue = tiles[i][j];
                 int correctTileValue = j + i*dimension + 1;
                 if (tileValue != 0 && tileValue != correctTileValue) {
-                    int mDistance = 0;
-                    int correctI = 0; //TODO: use dimension and correctTileValue as inputs
-                    int correctJ = 0; //TODO: use dimension and correctTileValue as inputs
-                    mDistance = Math.abs(correctI - i) + Math.abs(correctJ - j);
+                    int[] correctIJPosition = getCorrectIJPosition(correctTileValue);
+                    int mDistance = Math.abs(correctIJPosition[0] - i) + Math.abs(correctIJPosition[1] - j);
                     manhattan = manhattan + mDistance;
                 }
             }
@@ -65,26 +66,118 @@ public class Board {
 
     // is this board the goal board?
     public boolean isGoal() {
-        // TODO
-        return false;
+        int counter = 0;
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                boolean emptyIsRight = tiles[i][j] == 0 && i == j && j == (dimension - 1);
+                if (++counter != tiles[i][j] || emptyIsRight) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // does this board equal y?
     public boolean equals(Object y) {
-        // TODO
-        return false;
+        if (y instanceof Board) {
+            Board that = (Board) y;
+            if (this.dimension == that.dimension) {
+                for (int i = 0; i < dimension; i++) {
+                    for (int j = 0; j < dimension; j++) {
+                        if (this.tiles[i][j] != that.tiles[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+        return true;
     }
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        // TODO
-        return (Iterable<Board>) new Object();
+        int[] emptyIJPosition = getIJPosition(0);
+        int emptyI = emptyIJPosition[0];
+        int emptyJ = emptyIJPosition[1];
+
+        List<Board> neighbors = new ArrayList<>();
+
+        if (emptyI > 0) {
+            int[][] topNeighborTiles = tiles.clone();
+            replaceTile(topNeighborTiles, emptyI, emptyJ, emptyI - 1, emptyJ);
+            Board topNeighbor = new Board(topNeighborTiles);
+            neighbors.add(topNeighbor);
+        }
+
+        if (emptyI < (dimension - 1)) {
+            int[][] bottomNeighborTiles = tiles.clone();
+            replaceTile(bottomNeighborTiles, emptyI, emptyJ, emptyI + 1, emptyJ);
+            Board bottomNeighbor = new Board(bottomNeighborTiles);
+            neighbors.add(bottomNeighbor);
+        }
+
+        if (emptyJ > 0) {
+            int[][] leftNeighborTiles = tiles.clone();
+            replaceTile(leftNeighborTiles, emptyI, emptyJ, emptyI, emptyJ - 1);
+            Board leftNeighbor = new Board(leftNeighborTiles);
+            neighbors.add(leftNeighbor);
+        }
+
+        if (emptyJ < (dimension - 1)) {
+            int[][] rightNeighborTiles = tiles.clone();
+            replaceTile(rightNeighborTiles, emptyI, emptyJ, emptyI, emptyJ + 1);
+            Board rightNeighbor = new Board(rightNeighborTiles);
+            neighbors.add(rightNeighbor);
+        }
+
+        return neighbors;
     }
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
         // TODO
         return new Board(new int[1][1]);
+    }
+
+    private void replaceTile(int[][] tiles, int aI, int aJ, int bI, int bJ) {
+        int aHold = tiles[aI][aJ];
+        tiles[aI][aJ] = tiles[bI][bJ];
+        tiles[bI][bJ] = aHold;
+    }
+
+    private int[] getIJPosition(int tileValue) {
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                if (tiles[i][j] == tileValue) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+        return null;
+    }
+
+    private int[] getCorrectIJPosition(int correctTileValue) {
+        int counter = 0;
+        if (correctTileValue == 0) {
+            return new int[]{dimension - 1, dimension - 1};
+        }
+        else {
+            for (int i = 0; i < dimension; i++) {
+                for (int j = 0; j < dimension; j++) {
+                    if (++counter == correctTileValue) {
+                        return new int[]{i, j};
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     // unit testing (not graded)
