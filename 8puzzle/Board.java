@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.princeton.cs.algs4.StdOut;
+
 public class Board {
 
     private final int dimension;
@@ -17,11 +19,11 @@ public class Board {
     public String toString() {
         String boardString = String.valueOf(dimension());
         for (int i = 0; i < dimension; i++) {
-            boardString.concat("\n ");
+            boardString = boardString.concat("\n ");
             for (int j = 0; j < dimension; j++) {
-                boardString.concat(" ");
-                boardString.concat(String.valueOf(tiles[i][j]));
-                boardString.concat(" ");
+                boardString = boardString.concat(" ");
+                boardString = boardString.concat(String.valueOf(tiles[i][j]));
+                boardString = boardString.concat(" ");
             }
         }
         return boardString;
@@ -70,7 +72,7 @@ public class Board {
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 boolean emptyIsRight = tiles[i][j] == 0 && i == j && j == (dimension - 1);
-                if (++counter != tiles[i][j] || emptyIsRight) {
+                if (++counter != tiles[i][j] && !emptyIsRight) {
                     return false;
                 }
             }
@@ -142,8 +144,13 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        // TODO
-        return new Board(new int[1][1]);
+        Iterable<Board> neighbors = neighbors();
+        if (neighbors.iterator().hasNext()) {
+            return neighbors.iterator().next();
+        }
+        else {
+            return null;
+        }
     }
 
     private void replaceTile(int[][] tiles, int aI, int aJ, int bI, int bJ) {
@@ -182,7 +189,52 @@ public class Board {
 
     // unit testing (not graded)
     public static void main(String[] args) {
-        // TODO
+        int[][] aInitialTiles = new int[3][3];
+        aInitialTiles[0][0] = 1;
+        aInitialTiles[0][1] = 2;
+        aInitialTiles[0][2] = 3;
+        aInitialTiles[1][0] = 4;
+        aInitialTiles[1][1] = 5;
+        aInitialTiles[1][2] = 6;
+        aInitialTiles[2][0] = 7;
+        aInitialTiles[2][1] = 8;
+        aInitialTiles[2][2] = 0;
+        Board aBoard = new Board(aInitialTiles);
+        int[][] bInitialTiles = new int[3][3];
+        bInitialTiles[0][0] = 8;
+        bInitialTiles[0][1] = 1;
+        bInitialTiles[0][2] = 3;
+        bInitialTiles[1][0] = 4;
+        bInitialTiles[1][1] = 0;
+        bInitialTiles[1][2] = 2;
+        bInitialTiles[2][0] = 7;
+        bInitialTiles[2][1] = 6;
+        bInitialTiles[2][2] = 5;
+        Board bBoard = new Board(bInitialTiles);
+        StdOut.println("Board A toString():");
+        StdOut.println(aBoard.toString());
+        StdOut.println("Board B toString():");
+        StdOut.println(bBoard.toString());
+        StdOut.println("Board A dimension():");
+        StdOut.println(aBoard.dimension());
+        StdOut.println("Board A hamming():");
+        StdOut.println(aBoard.hamming());
+        StdOut.println("Board B hamming():");
+        StdOut.println(bBoard.hamming());
+        StdOut.println("Board A manhattan():");
+        StdOut.println(aBoard.manhattan());
+        StdOut.println("Board B manhattan():");
+        StdOut.println(bBoard.manhattan());
+        StdOut.println("Board A isGoal():");
+        StdOut.println(aBoard.isGoal());
+        StdOut.println("Board B isGoal():");
+        StdOut.println(bBoard.isGoal());
+        StdOut.println("A.equals(A):");
+        StdOut.println(aBoard.equals(aBoard));
+        StdOut.println("A.equals(B):");
+        StdOut.println(aBoard.equals(bBoard));
+        StdOut.println("neighbors():");
+        StdOut.println("twin():");
     }
 
 }
