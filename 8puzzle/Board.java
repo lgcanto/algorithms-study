@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import edu.princeton.cs.algs4.StdOut;
@@ -17,7 +18,7 @@ public class Board {
                                            
     // string representation of this board
     public String toString() {
-        String boardString = String.valueOf(dimension());
+        String boardString = String.valueOf(dimension);
         for (int i = 0; i < dimension; i++) {
             boardString = boardString.concat("\n ");
             for (int j = 0; j < dimension; j++) {
@@ -52,12 +53,12 @@ public class Board {
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
         int manhattan = 0;
-        for (int i = 0; i < dimension(); i++) {
-            for (int j = 0; j < dimension(); j++) {
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
                 int tileValue = tiles[i][j];
                 int correctTileValue = j + i*dimension + 1;
                 if (tileValue != 0 && tileValue != correctTileValue) {
-                    int[] correctIJPosition = getCorrectIJPosition(correctTileValue);
+                    int[] correctIJPosition = getCorrectIJPosition(tileValue);
                     int mDistance = Math.abs(correctIJPosition[0] - i) + Math.abs(correctIJPosition[1] - j);
                     manhattan = manhattan + mDistance;
                 }
@@ -112,28 +113,28 @@ public class Board {
         List<Board> neighbors = new ArrayList<>();
 
         if (emptyI > 0) {
-            int[][] topNeighborTiles = tiles.clone();
+            int[][] topNeighborTiles = copyAndReturnTiles(tiles);
             replaceTile(topNeighborTiles, emptyI, emptyJ, emptyI - 1, emptyJ);
             Board topNeighbor = new Board(topNeighborTiles);
             neighbors.add(topNeighbor);
         }
 
         if (emptyI < (dimension - 1)) {
-            int[][] bottomNeighborTiles = tiles.clone();
+            int[][] bottomNeighborTiles = copyAndReturnTiles(tiles);
             replaceTile(bottomNeighborTiles, emptyI, emptyJ, emptyI + 1, emptyJ);
             Board bottomNeighbor = new Board(bottomNeighborTiles);
             neighbors.add(bottomNeighbor);
         }
 
         if (emptyJ > 0) {
-            int[][] leftNeighborTiles = tiles.clone();
+            int[][] leftNeighborTiles = copyAndReturnTiles(tiles);
             replaceTile(leftNeighborTiles, emptyI, emptyJ, emptyI, emptyJ - 1);
             Board leftNeighbor = new Board(leftNeighborTiles);
             neighbors.add(leftNeighbor);
         }
 
         if (emptyJ < (dimension - 1)) {
-            int[][] rightNeighborTiles = tiles.clone();
+            int[][] rightNeighborTiles = copyAndReturnTiles(tiles);
             replaceTile(rightNeighborTiles, emptyI, emptyJ, emptyI, emptyJ + 1);
             Board rightNeighbor = new Board(rightNeighborTiles);
             neighbors.add(rightNeighbor);
@@ -151,6 +152,18 @@ public class Board {
         else {
             return null;
         }
+    }
+
+    private int[][] copyAndReturnTiles(int[][] tiles) {
+        int[][] tilesCopy = new int[dimension][dimension];
+        for (int i = 0; i < dimension; i++)
+        {
+            for (int j = 0; j < dimension; j++)
+            {
+                tilesCopy[i][j] = tiles[i][j];
+            }
+        }
+        return tilesCopy;
     }
 
     private void replaceTile(int[][] tiles, int aI, int aJ, int bI, int bJ) {
@@ -233,8 +246,13 @@ public class Board {
         StdOut.println(aBoard.equals(aBoard));
         StdOut.println("A.equals(B):");
         StdOut.println(aBoard.equals(bBoard));
-        StdOut.println("neighbors():");
-        StdOut.println("twin():");
+        StdOut.println("B neighbors():");
+        Iterator<Board> bNeighborsIterator = bBoard.neighbors().iterator();
+        while (bNeighborsIterator.hasNext()) {
+            StdOut.println(bNeighborsIterator.next().toString());
+        }
+        StdOut.println("B twin():");
+        StdOut.println(bBoard.twin());
     }
 
 }
