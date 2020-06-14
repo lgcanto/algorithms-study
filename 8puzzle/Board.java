@@ -8,12 +8,56 @@ public class Board {
 
     private final int dimension;
     private final int[][] tiles;
+    private final int hamming;
+    private final int manhattan;
+    private final boolean isGoal;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
         this.tiles = tiles;
         dimension = tiles.length;
+
+        // computing hamming distance
+        int hamming = 0;
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                int tileValue = tiles[i][j];
+                int correctTileValue = j + i*dimension + 1;
+                if (tileValue != 0 && tileValue != correctTileValue) {
+                    hamming++;
+                }
+            }
+        }
+        this.hamming = hamming;
+
+        // computing manhattan distance
+        int manhattan = 0;
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                int tileValue = tiles[i][j];
+                int correctTileValue = j + i*dimension + 1;
+                if (tileValue != 0 && tileValue != correctTileValue) {
+                    int[] correctIJPosition = getCorrectIJPosition(tileValue);
+                    int mDistance = Math.abs(correctIJPosition[0] - i) + Math.abs(correctIJPosition[1] - j);
+                    manhattan = manhattan + mDistance;
+                }
+            }
+        }
+        this.manhattan = manhattan;
+
+        // checking if board is goal
+        int counter = 0;
+        boolean isGoal = true;
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                boolean emptyIsRight = tiles[i][j] == 0 && i == j && j == (dimension - 1);
+                if (++counter != tiles[i][j] && !emptyIsRight) {
+                    isGoal = false;
+                }
+            }
+        }
+        this.isGoal = isGoal;
     }
                                            
     // string representation of this board
@@ -37,48 +81,17 @@ public class Board {
 
     // number of tiles out of place
     public int hamming() {
-        int hamming = 0;
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                int tileValue = tiles[i][j];
-                int correctTileValue = j + i*dimension + 1;
-                if (tileValue != 0 && tileValue != correctTileValue) {
-                    hamming++;
-                }
-            }
-        }
         return hamming;
     }
 
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
-        int manhattan = 0;
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                int tileValue = tiles[i][j];
-                int correctTileValue = j + i*dimension + 1;
-                if (tileValue != 0 && tileValue != correctTileValue) {
-                    int[] correctIJPosition = getCorrectIJPosition(tileValue);
-                    int mDistance = Math.abs(correctIJPosition[0] - i) + Math.abs(correctIJPosition[1] - j);
-                    manhattan = manhattan + mDistance;
-                }
-            }
-        }
         return manhattan;
     }
 
     // is this board the goal board?
     public boolean isGoal() {
-        int counter = 0;
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                boolean emptyIsRight = tiles[i][j] == 0 && i == j && j == (dimension - 1);
-                if (++counter != tiles[i][j] && !emptyIsRight) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return isGoal;
     }
 
     // does this board equal y?
