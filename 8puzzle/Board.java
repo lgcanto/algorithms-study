@@ -158,13 +158,36 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        Iterable<Board> neighbors = neighbors();
-        if (neighbors.iterator().hasNext()) {
-            return neighbors.iterator().next();
+        int[][] twinTiles = copyAndReturnTiles(tiles);
+        int[] emptyIJPosition = getIJPosition(0);
+        if (dimension > 1) {
+            int aI = 0;
+            int aJ = 0;
+            int bI = 0;
+            int bJ = 0;
+            boolean aTileFound = false;
+            boolean bTileFound = false;
+
+            for (int i = 0; i < dimension; i++) {
+                for (int j = 0; j < dimension; j++) {
+                    if (!bTileFound && i != emptyIJPosition[0] && j != emptyIJPosition[1]) {
+                        if (!aTileFound) {
+                            aI = i;
+                            aJ = j;
+                            aTileFound = true;
+                        }
+                        else {
+                            aI = i;
+                            aJ = j;
+                            bTileFound = true;
+                        }
+                    }
+                }
+            }
+
+            replaceTile(twinTiles, aI, aJ, bI, bJ);
         }
-        else {
-            return null;
-        }
+        return new Board(twinTiles);
     }
 
     private int[][] copyAndReturnTiles(int[][] tiles) {
