@@ -15,24 +15,24 @@ public class Board {
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
-        this.tiles = tiles;
         dimension = tiles.length;
+        this.tiles = copyAndReturnArray(tiles);
 
         // computing hamming distance
-        int hamming = 0;
+        int hammingHolder = 0;
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 int tileValue = tiles[i][j];
                 int correctTileValue = j + i*dimension + 1;
                 if (tileValue != 0 && tileValue != correctTileValue) {
-                    hamming++;
+                    hammingHolder++;
                 }
             }
         }
-        this.hamming = hamming;
+        this.hamming = hammingHolder;
 
         // computing manhattan distance
-        int manhattan = 0;
+        int manhattanHolder = 0;
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 int tileValue = tiles[i][j];
@@ -40,24 +40,25 @@ public class Board {
                 if (tileValue != 0 && tileValue != correctTileValue) {
                     int[] correctIJPosition = getCorrectIJPosition(tileValue);
                     int mDistance = Math.abs(correctIJPosition[0] - i) + Math.abs(correctIJPosition[1] - j);
-                    manhattan = manhattan + mDistance;
+                    manhattanHolder = manhattanHolder + mDistance;
                 }
             }
         }
-        this.manhattan = manhattan;
+        this.manhattan = manhattanHolder;
 
         // checking if board is goal
         int counter = 0;
-        boolean isGoal = true;
+        boolean isGoalHolder = true;
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 boolean emptyIsRight = tiles[i][j] == 0 && i == j && j == (dimension - 1);
-                if (++counter != tiles[i][j] && !emptyIsRight) {
-                    isGoal = false;
+                counter++;
+                if (counter != tiles[i][j] && !emptyIsRight) {
+                    isGoalHolder = false;
                 }
             }
         }
-        this.isGoal = isGoal;
+        this.isGoal = isGoalHolder;
     }
                                            
     // string representation of this board
@@ -96,7 +97,7 @@ public class Board {
 
     // does this board equal y?
     public boolean equals(Object y) {
-        if (y instanceof Board) {
+        if (y.getClass().equals(Board.class)) {
             Board that = (Board) y;
             if (this.dimension == that.dimension) {
                 for (int i = 0; i < dimension; i++) {
@@ -126,28 +127,28 @@ public class Board {
         List<Board> neighbors = new ArrayList<>();
 
         if (emptyI > 0) {
-            int[][] topNeighborTiles = copyAndReturnTiles(tiles);
+            int[][] topNeighborTiles = copyAndReturnArray(tiles);
             replaceTile(topNeighborTiles, emptyI, emptyJ, emptyI - 1, emptyJ);
             Board topNeighbor = new Board(topNeighborTiles);
             neighbors.add(topNeighbor);
         }
 
         if (emptyI < (dimension - 1)) {
-            int[][] bottomNeighborTiles = copyAndReturnTiles(tiles);
+            int[][] bottomNeighborTiles = copyAndReturnArray(tiles);
             replaceTile(bottomNeighborTiles, emptyI, emptyJ, emptyI + 1, emptyJ);
             Board bottomNeighbor = new Board(bottomNeighborTiles);
             neighbors.add(bottomNeighbor);
         }
 
         if (emptyJ > 0) {
-            int[][] leftNeighborTiles = copyAndReturnTiles(tiles);
+            int[][] leftNeighborTiles = copyAndReturnArray(tiles);
             replaceTile(leftNeighborTiles, emptyI, emptyJ, emptyI, emptyJ - 1);
             Board leftNeighbor = new Board(leftNeighborTiles);
             neighbors.add(leftNeighbor);
         }
 
         if (emptyJ < (dimension - 1)) {
-            int[][] rightNeighborTiles = copyAndReturnTiles(tiles);
+            int[][] rightNeighborTiles = copyAndReturnArray(tiles);
             replaceTile(rightNeighborTiles, emptyI, emptyJ, emptyI, emptyJ + 1);
             Board rightNeighbor = new Board(rightNeighborTiles);
             neighbors.add(rightNeighbor);
@@ -158,7 +159,7 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        int[][] twinTiles = copyAndReturnTiles(tiles);
+        int[][] twinTiles = copyAndReturnArray(tiles);
         int[] emptyIJPosition = getIJPosition(0);
         if (dimension > 1) {
             int aI = 0;
@@ -190,22 +191,22 @@ public class Board {
         return new Board(twinTiles);
     }
 
-    private int[][] copyAndReturnTiles(int[][] tiles) {
-        int[][] tilesCopy = new int[dimension][dimension];
+    private int[][] copyAndReturnArray(int[][] array) {
+        int[][] arrayCopy = new int[dimension][dimension];
         for (int i = 0; i < dimension; i++)
         {
             for (int j = 0; j < dimension; j++)
             {
-                tilesCopy[i][j] = tiles[i][j];
+                arrayCopy[i][j] = array[i][j];
             }
         }
-        return tilesCopy;
+        return arrayCopy;
     }
 
-    private void replaceTile(int[][] tiles, int aI, int aJ, int bI, int bJ) {
-        int aHold = tiles[aI][aJ];
-        tiles[aI][aJ] = tiles[bI][bJ];
-        tiles[bI][bJ] = aHold;
+    private void replaceTile(int[][] tilesArray, int aI, int aJ, int bI, int bJ) {
+        int aHold = tilesArray[aI][aJ];
+        tilesArray[aI][aJ] = tilesArray[bI][bJ];
+        tilesArray[bI][bJ] = aHold;
     }
 
     private int[] getIJPosition(int tileValue) {
@@ -216,7 +217,7 @@ public class Board {
                 }
             }
         }
-        return null;
+        return new int[0];
     }
 
     private int[] getCorrectIJPosition(int correctTileValue) {
@@ -227,13 +228,14 @@ public class Board {
         else {
             for (int i = 0; i < dimension; i++) {
                 for (int j = 0; j < dimension; j++) {
-                    if (++counter == correctTileValue) {
+                    counter++;
+                    if (counter == correctTileValue) {
                         return new int[]{i, j};
                     }
                 }
             }
         }
-        return null;
+        return new int[0];
     }
 
     // unit testing (not graded)

@@ -3,7 +3,6 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.MinPQ;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,45 +20,50 @@ public class Solver {
 
         boolean solutionFound = false;
         boolean twinSolutionFound = false;
-        boolean executeTwinThread = true;
+        boolean executeTwinThread = false;
 
-        // can be changed to use manhattan priority
-        MinPQ pq = new MinPQ(SearchNode.BY_HAMMING);
-        MinPQ twinPq = new MinPQ(SearchNode.BY_HAMMING);
-        int moves = 0;
-        int twinMoves = 0;
+        MinPQ<SearchNode> pq = new MinPQ<>();
+        MinPQ<SearchNode> twinPq = new MinPQ<>();
+        int movesHolder = 0;
+        int twinMovesHolder = 0;
         List<Board> solutionList = new ArrayList<>();
         SearchNode initialSearchNode = new SearchNode(initial, null, 0);
         SearchNode twinInitialSearchNode = new SearchNode(initial.twin(), null, 0);
         pq.insert(initialSearchNode);
         twinPq.insert(twinInitialSearchNode);
 
-        while(!solutionFound) {
+        while (!solutionFound) {
             if (!executeTwinThread) {
-                SearchNode deletedSearchNode = (SearchNode) pq.delMin();
+                SearchNode deletedSearchNode = pq.delMin();
                 solutionList.add(deletedSearchNode.board);
                 if (deletedSearchNode.board.isGoal()) {
                     solutionFound = true;
                 }
                 else {
-                    moves++;
+                    movesHolder++;
                     Iterator<Board> neighborsIterator = deletedSearchNode.board.neighbors().iterator();
                     while (neighborsIterator.hasNext()) {
-                        pq.insert(new SearchNode(neighborsIterator.next(), deletedSearchNode, moves));
+                        Board board = neighborsIterator.next();
+                        if (!board.equals(deletedSearchNode)) {
+                          pq.insert(new SearchNode(board, deletedSearchNode, movesHolder));
+                        }
                     }
                 }
             }
             else {
-                SearchNode deletedTwinSearchNode = (SearchNode) twinPq.delMin();
+                SearchNode deletedTwinSearchNode = twinPq.delMin();
                 if (deletedTwinSearchNode.board.isGoal()) {
                     solutionFound = true;
                     twinSolutionFound = true;
                 }
                 else {
-                    twinMoves++;
+                    twinMovesHolder++;
                     Iterator<Board> twinNeighborsIterator = deletedTwinSearchNode.board.neighbors().iterator();
                     while (twinNeighborsIterator.hasNext()) {
-                        twinPq.insert(new SearchNode(twinNeighborsIterator.next(), deletedTwinSearchNode, twinMoves));
+                      Board twinBoard = twinNeighborsIterator.next();
+                      if (!twinBoard.equals(deletedTwinSearchNode)) {
+                        twinPq.insert(new SearchNode(twinBoard, deletedTwinSearchNode, twinMovesHolder));
+                      }
                     }
                 }
             }
@@ -73,7 +77,7 @@ public class Solver {
         }
         else {
             this.solvable = true;
-            this.moves = moves;
+            this.moves = movesHolder;
             this.solution = solutionList;
         }
     }
@@ -117,14 +121,12 @@ public class Solver {
         }
     }
 
-    private static class SearchNode {
+    private static class SearchNode implements Comparable<SearchNode> {
         private final Board board;
         private final int moves;
         private final int hammingPriority;
         private final int manhattanPriority;
         private final SearchNode previousSearchNode;
-        private static final Comparator<SearchNode> BY_HAMMING = new HammingComparator();
-        private static final Comparator<SearchNode> BY_MANHATTAN = new ManhattanComparator();
 
         private SearchNode(Board board, SearchNode previousSearchNode, int moves) {
             this.board = board;
@@ -134,16 +136,12 @@ public class Solver {
             this.manhattanPriority = board.manhattan() + moves;
         }
 
-        private static class HammingComparator implements Comparator<SearchNode> {
-            public int compare (SearchNode a, SearchNode b) {
-                return a.hammingPriority - b.hammingPriority;
-            }
-        }
+        // public int compareTo(SearchNode that) {
+        //   return this.hammingPriority - that.hammingPriority;
+        // }
 
-        private static class ManhattanComparator implements Comparator<SearchNode> {
-            public int compare (SearchNode a, SearchNode b) {
-                return a.manhattanPriority - b.manhattanPriority;
-            }
+        public int compareTo(SearchNode that) {
+          return this.manhattanPriority - that.manhattanPriority;
         }
     }
 }
