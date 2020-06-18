@@ -67,6 +67,10 @@ public class Solver {
                     }
                 }
             }
+            if (movesHolder > initial.dimension()*initial.dimension()) {
+                twinSolutionFound = true;
+                break;
+            }
             executeTwinThread = !executeTwinThread;
         }
 
