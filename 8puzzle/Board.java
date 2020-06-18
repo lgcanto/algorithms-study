@@ -3,7 +3,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
 
@@ -167,19 +166,24 @@ public class Board {
             int aJ = 0;
             int bI = 0;
             int bJ = 0;
+            boolean aTileFound = false;
+            boolean bTileFound = false;
 
-            boolean firstShuffle = true;
-
-            while (firstShuffle ||
-                (aI == emptyIJPosition[0] &&
-                aJ == emptyIJPosition[1]) ||
-                (bI == emptyIJPosition[0] &&
-                bJ == emptyIJPosition[1])) {
-                firstShuffle = false;
-                aI = StdRandom.uniform(dimension);
-                aJ = StdRandom.uniform(dimension);
-                bI = StdRandom.uniform(dimension);
-                bJ = StdRandom.uniform(dimension);
+            for (int i = 0; i < dimension; i++) {
+                for (int j = 0; j < dimension; j++) {
+                    if (!bTileFound && i != emptyIJPosition[0] && j != emptyIJPosition[1]) {
+                        if (!aTileFound) {
+                            aI = i;
+                            aJ = j;
+                            aTileFound = true;
+                        }
+                        else {
+                            aI = i;
+                            aJ = j;
+                            bTileFound = true;
+                        }
+                    }
+                }
             }
 
             replaceTile(twinTiles, aI, aJ, bI, bJ);
