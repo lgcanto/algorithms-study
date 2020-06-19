@@ -29,6 +29,8 @@ public class Solver {
         List<Board> solutionList = new ArrayList<>();
         SearchNode initialSearchNode = new SearchNode(initial, 0);
         SearchNode twinInitialSearchNode = new SearchNode(initial.twin(), 0);
+        SearchNode previousSearchNode = null;
+        SearchNode twinPreviousSearchNode = null;
         pq.insert(initialSearchNode);
         twinPq.insert(twinInitialSearchNode);
 
@@ -44,29 +46,32 @@ public class Solver {
                     Iterator<Board> neighborsIterator = deletedSearchNode.board.neighbors().iterator();
                     while (neighborsIterator.hasNext()) {
                         Board board = neighborsIterator.next();
-                        if (!board.equals(deletedSearchNode.board)) {
+                        if (previousSearchNode == null || !board.equals(previousSearchNode.board)) {
                           pq.insert(new SearchNode(board, movesHolder));
                         }
                     }
                 }
+                previousSearchNode = deletedSearchNode;
             }
             else {
-                SearchNode deletedTwinSearchNode = twinPq.delMin();
-                if (deletedTwinSearchNode.board.isGoal()) {
+                SearchNode twinDeletedSearchNode = twinPq.delMin();
+                if (twinDeletedSearchNode.board.isGoal()) {
                     solutionFound = true;
                     twinSolutionFound = true;
                 }
                 else {
                     twinMovesHolder++;
-                    Iterator<Board> twinNeighborsIterator = deletedTwinSearchNode.board.neighbors().iterator();
+                    Iterator<Board> twinNeighborsIterator = twinDeletedSearchNode.board.neighbors().iterator();
                     while (twinNeighborsIterator.hasNext()) {
                       Board twinBoard = twinNeighborsIterator.next();
-                      if (!twinBoard.equals(deletedTwinSearchNode.board)) {
+                      if (twinPreviousSearchNode == null || !twinBoard.equals(twinPreviousSearchNode.board)) {
                         twinPq.insert(new SearchNode(twinBoard, twinMovesHolder));
                       }
                     }
                 }
+                twinPreviousSearchNode = twinDeletedSearchNode;
             }
+            // TOD: remove hack
             if (movesHolder > initial.dimension()*initial.dimension()) {
                 twinSolutionFound = true;
                 break;
