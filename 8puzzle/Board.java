@@ -171,15 +171,15 @@ public class Board {
 
             for (int i = 0; i < dimension; i++) {
                 for (int j = 0; j < dimension; j++) {
-                    if (!bTileFound && i != emptyIJPosition[0] && j != emptyIJPosition[1]) {
+                    if (!bTileFound && (i != emptyIJPosition[0] || j != emptyIJPosition[1])) {
                         if (!aTileFound) {
                             aI = i;
                             aJ = j;
                             aTileFound = true;
                         }
                         else {
-                            aI = i;
-                            aJ = j;
+                            bI = i;
+                            bJ = j;
                             bTileFound = true;
                         }
                     }
