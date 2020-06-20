@@ -97,6 +97,9 @@ public class Board {
 
     // does this board equal y?
     public boolean equals(Object y) {
+        if (y == null) {
+            throw new NullPointerException();
+        }
         if (y.getClass().equals(Board.class)) {
             Board that = (Board) y;
             if (this.dimension == that.dimension) {
