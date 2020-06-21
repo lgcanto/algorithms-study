@@ -71,7 +71,7 @@ public class Solver {
                 }
                 twinPreviousSearchNode = twinDeletedSearchNode;
             }
-            // TODO: remove hack
+            // remove hack
             if (movesHolder > initial.dimension()*initial.dimension()) {
                 twinSolutionFound = true;
                 break;
