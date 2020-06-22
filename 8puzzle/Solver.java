@@ -1,10 +1,9 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class Solver {
 
@@ -26,9 +25,9 @@ public class Solver {
         MinPQ<SearchNode> twinPq = new MinPQ<>();
         int movesHolder = 0;
         int twinMovesHolder = 0;
-        List<Board> solutionList = new ArrayList<>();
-        SearchNode initialSearchNode = new SearchNode(initial, 0);
-        SearchNode twinInitialSearchNode = new SearchNode(initial.twin(), 0);
+        SearchNode finalSearchNode = null;
+        SearchNode initialSearchNode = new SearchNode(initial, null, 0);
+        SearchNode twinInitialSearchNode = new SearchNode(initial.twin(), null, 0);
         SearchNode previousSearchNode = null;
         SearchNode twinPreviousSearchNode = null;
         pq.insert(initialSearchNode);
@@ -37,17 +36,19 @@ public class Solver {
         while (!solutionFound) {
             if (!executeTwinThread) {
                 SearchNode deletedSearchNode = pq.delMin();
-                solutionList.add(deletedSearchNode.board);
+
                 if (deletedSearchNode.board.isGoal()) {
                     solutionFound = true;
+                    finalSearchNode = deletedSearchNode;
+                    movesHolder = deletedSearchNode.move;
                 }
                 else {
-                    movesHolder++;
+                    movesHolder = deletedSearchNode.move + 1;
                     Iterator<Board> neighborsIterator = deletedSearchNode.board.neighbors().iterator();
                     while (neighborsIterator.hasNext()) {
                         Board board = neighborsIterator.next();
                         if (previousSearchNode == null || !board.equals(previousSearchNode.board)) {
-                          pq.insert(new SearchNode(board, movesHolder));
+                          pq.insert(new SearchNode(board, deletedSearchNode, movesHolder));
                         }
                     }
                 }
@@ -60,21 +61,16 @@ public class Solver {
                     twinSolutionFound = true;
                 }
                 else {
-                    twinMovesHolder++;
+                    twinMovesHolder = twinDeletedSearchNode.move + 1;
                     Iterator<Board> twinNeighborsIterator = twinDeletedSearchNode.board.neighbors().iterator();
                     while (twinNeighborsIterator.hasNext()) {
                       Board twinBoard = twinNeighborsIterator.next();
                       if (twinPreviousSearchNode == null || !twinBoard.equals(twinPreviousSearchNode.board)) {
-                        twinPq.insert(new SearchNode(twinBoard, twinMovesHolder));
+                        twinPq.insert(new SearchNode(twinBoard, twinDeletedSearchNode, twinMovesHolder));
                       }
                     }
                 }
                 twinPreviousSearchNode = twinDeletedSearchNode;
-            }
-            // remove hack
-            if (movesHolder > initial.dimension()*initial.dimension()) {
-                twinSolutionFound = true;
-                break;
             }
             executeTwinThread = !executeTwinThread;
         }
@@ -87,7 +83,13 @@ public class Solver {
         else {
             this.solvable = true;
             this.moves = movesHolder;
-            this.solution = solutionList;
+            Stack<Board> solutionStack = new Stack<>();
+            while (finalSearchNode.previousSearchNode != null) {
+                solutionStack.push(finalSearchNode.board);
+                finalSearchNode = finalSearchNode.previousSearchNode;
+            }
+            solutionStack.push(finalSearchNode.board);
+            this.solution = solutionStack;
         }
     }
 
@@ -132,13 +134,17 @@ public class Solver {
 
     private static class SearchNode implements Comparable<SearchNode> {
         private final Board board;
+        private final SearchNode previousSearchNode;
         //  private final int hammingPriority;
         private final int manhattanPriority;
+        private final int move;
 
-        private SearchNode(Board board, int moves) {
+        private SearchNode(Board board, SearchNode previousSearchNode, int move) {
             this.board = board;
-            // this.hammingPriority = board.hamming() + moves;
-            this.manhattanPriority = board.manhattan() + moves;
+            this.previousSearchNode = previousSearchNode;
+            this.move = move;
+            // this.hammingPriority = board.hamming() + move;
+            this.manhattanPriority = board.manhattan() + this.move;
         }
 
         // public int compareTo(SearchNode that) {
