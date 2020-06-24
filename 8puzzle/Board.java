@@ -98,7 +98,7 @@ public class Board {
     // does this board equal y?
     public boolean equals(Object y) {
         if (y == null) {
-            throw new NullPointerException();
+            return false;
         }
         if (y.getClass().equals(Board.class)) {
             Board that = (Board) y;
